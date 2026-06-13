@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sushant Basnet — Myster SVZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D0E14;
+    --surface:#16181F;
+    --surface2:#1D2029;
+    --text:#F5F3EE;
+    --muted:#8A8D9A;
+    --accent:#FF5F38;
+    --accent2:#5EE6D9;
+    --line:#2A2D38;
+    --display:'Space Grotesk',sans-serif;
+    --body:'Inter',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--accent);color:var(--bg);}
+
+  /* ===== NAV / TIMELINE ===== */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(13,14,20,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1200px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 32px;
+  }
+  .logo{font-family:var(--display);font-weight:700;font-size:1.1rem;letter-spacing:0.04em;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex;gap:32px;font-family:var(--mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;}
+  .nav-links a{color:var(--muted);transition:color .25s;position:relative;}
+  .nav-links a:hover{color:var(--text);}
+  .nav-links a:focus-visible, a:focus-visible{outline:2px solid var(--accent2);outline-offset:4px;}
+
+  /* timeline scrubber strip */
+  .scrubber{height:3px;background:var(--surface2);position:relative;overflow:hidden;}
+  .scrubber-fill{
+    position:absolute;left:0;top:0;height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    width:0%;
+    transition:width .15s linear;
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    min-height:100vh;
+    display:flex;align-items:center;
+    padding:140px 32px 80px;
+    max-width:1200px;margin:0 auto;
+    gap:60px;
+  }
+  .hero-text{flex:1.2;}
+  .eyebrow{
+    font-family:var(--mono);font-size:0.8rem;color:var(--accent2);
+    letter-spacing:0.15em;text-transform:uppercase;margin-bottom:18px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{
+    content:'';width:8px;height:8px;background:var(--accent);
+    display:inline-block;border-radius:1px;
+    animation:blink 1.4s infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+
+  .hero h1{
+    font-family:var(--display);
+    font-size:clamp(2.8rem,7vw,5.2rem);
+    font-weight:700;
+    line-height:1.04;
+    letter-spacing:-0.01em;
+    margin-bottom:24px;
+  }
+  .hero h1 .line2{color:var(--muted);}
+  .hero h1 .accent{
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.lede{
+    font-size:1.1rem;color:var(--muted);max-width:520px;margin-bottom:36px;
+  }
+  .hero-actions{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:48px;}
+  .btn{
+    font-family:var(--mono);font-size:0.85rem;
+    padding:14px 28px;border-radius:4px;
+    border:1px solid var(--line);
+    transition:all .25s;
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .btn-primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:500;}
+  .btn-primary:hover{background:transparent;color:var(--accent);}
+  .btn-ghost:hover{border-color:var(--accent2);color:var(--accent2);}
+
+  .meta-row{display:flex;gap:28px;font-family:var(--mono);font-size:0.78rem;color:var(--muted);flex-wrap:wrap;}
+  .meta-row b{color:var(--text);font-weight:500;}
+
+  /* portrait / project monitor */
+  .hero-visual{
+    flex:1;display:flex;justify-content:center;align-items:center;
+    position:relative;
+  }
+  .monitor{
+    width:340px;background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.6);
+  }
+  .monitor-bar{
+    display:flex;align-items:center;gap:8px;padding:10px 14px;
+    border-bottom:1px solid var(--line);background:var(--surface2);
+    font-family:var(--mono);font-size:0.7rem;color:var(--muted);
+  }
+  .dot{width:8px;height:8px;border-radius:50%;}
+  .dot.r{background:#FF5F5F;}
+  .dot.y{background:#FFD25F;}
+  .dot.g{background:var(--accent2);}
+  .monitor img{display:block;width:100%;height:380px;object-fit:cover;filter:saturate(1.05) contrast(1.05);}
+  .monitor-foot{
+    padding:12px 14px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);
+    display:flex;justify-content:space-between;border-top:1px solid var(--line);
+  }
+  .monitor-foot .rec{color:var(--accent);}
+
+  /* ===== SECTION SHARED ===== */
+  section{padding:110px 32px;max-width:1200px;margin:0 auto;}
+  .sec-head{margin-bottom:60px;}
+  .sec-num{font-family:var(--mono);color:var(--accent2);font-size:0.85rem;letter-spacing:0.1em;margin-bottom:14px;}
+  .sec-title{font-family:var(--display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:700;}
+  .sec-title .muted{color:var(--muted);}
+
+  /* ===== ABOUT ===== */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+  .about-grid p{color:var(--muted);font-size:1.05rem;margin-bottom:20px;max-width:520px;}
+  .about-grid p b{color:var(--text);}
+  .lang-list{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px;}
+  .lang-pill{
+    font-family:var(--mono);font-size:0.78rem;padding:8px 16px;border:1px solid var(--line);border-radius:100px;color:var(--text);
+  }
+  .edu-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:28px;
+  }
+  .edu-card .row{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line);}
+  .edu-card .row:last-child{border-bottom:none;}
+  .edu-card .row .l{font-family:var(--mono);font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
+  .edu-card .row .r{font-weight:600;text-align:right;}
+  .edu-card .r small{display:block;color:var(--muted);font-weight:400;font-size:0.85rem;margin-top:2px;}
+  .badge-status{
+    display:inline-block;margin-top:18px;font-family:var(--mono);font-size:0.75rem;
+    color:var(--accent2);border:1px solid var(--accent2);padding:6px 14px;border-radius:100px;
+  }
+
+  /* ===== SKILLS ===== */
+  .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .skill-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    padding:32px 28px;transition:transform .3s, border-color .3s;
+    position:relative;overflow:hidden;
+  }
+  .skill-card:hover{transform:translateY(-6px);border-color:var(--accent2);}
+  .skill-card .tag{font-family:var(--mono);font-size:0.7rem;color:var(--accent);letter-spacing:0.1em;margin-bottom:14px;display:block;}
+  .skill-card h3{font-family:var(--display);font-size:1.35rem;margin-bottom:10px;}
+  .skill-card p{color:var(--muted);font-size:0.92rem;}
+  .skill-card .bar{height:4px;background:var(--surface2);border-radius:4px;margin-top:22px;overflow:hidden;}
+  .skill-card .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;}
+
+  /* ===== TIMELINE / EXPERIENCE STRIP ===== */
+  .timeline{position:relative;padding-left:30px;border-left:1px solid var(--line);}
+  .tl-item{position:relative;margin-bottom:48px;padding-left:30px;}
+  .tl-item::before{
+    content:'';position:absolute;left:-36px;top:4px;width:11px;height:11px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--accent2);
+  }
+  .tl-time{font-family:var(--mono);font-size:0.75rem;color:var(--accent2);letter-spacing:0.08em;margin-bottom:6px;}
+  .tl-item h4{font-family:var(--display);font-size:1.3rem;margin-bottom:6px;}
+  .tl-item p{color:var(--muted);max-width:560px;}
+
+  /* ===== CHANNELS / CONTACT ===== */
+  .contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;}
+  .contact-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:40px;
+  }
+  .contact-card h3{font-family:var(--display);font-size:1.6rem;margin-bottom:8px;}
+  .contact-card p{color:var(--muted);margin-bottom:28px;max-width:420px;}
+  .channel-list{display:flex;flex-direction:column;gap:14px;}
+  .channel-link{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 22px;background:var(--surface2);border:1px solid var(--line);border-radius:8px;
+    font-family:var(--mono);font-size:0.9rem;transition:.25s;
+  }
+  .channel-link:hover{border-color:var(--accent);transform:translateX(4px);}
+  .channel-link .name{display:flex;align-items:center;gap:12px;color:var(--text);font-weight:500;}
+  .channel-link .arrow{color:var(--muted);transition:.25s;}
+  .channel-link:hover .arrow{color:var(--accent);transform:translateX(4px);}
+  .icon-dot{width:10px;height:10px;border-radius:50%;}
+  .icon-dot.ig{background:linear-gradient(135deg,#FF5F38,#FFD25F);}
+  .icon-dot.yt{background:#FF5F5F;}
+
+  .render-stats{display:flex;flex-direction:column;gap:0;}
+  .render-stats .stat{padding:24px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;}
+  .render-stats .stat:last-child{border-bottom:none;}
+  .render-stats .stat .num{font-family:var(--display);font-size:2.4rem;font-weight:700;color:var(--accent2);}
+  .render-stats .stat .lbl{font-family:var(--mono);font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;text-align:right;}
+
+  /* ===== FOOTER ===== */
+  footer{
+    border-top:1px solid var(--line);padding:36px 32px;
+    display:flex;justify-content:space-between;align-items:center;
+    max-width:1200px;margin:0 auto;flex-wrap:wrap;gap:12px;
+  }
+  footer .f-left{font-family:var(--mono);font-size:0.78rem;color:var(--muted);}
+  footer .f-left b{color:var(--text);}
+  .back-top{font-family:var(--mono);font-size:0.78rem;color:var(--accent2);}
+
+  /* ===== REVEAL ANIM ===== */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:900px){
+    .hero{flex-direction:column;padding-top:120px;}
+    .about-grid,.contact-grid{grid-template-columns:1fr;}
+    .skills-grid{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .monitor{width:100%;max-width:340px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="logo">MYSTER<span>SVZ</span></div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+    <div class="scrubber"><div class="scrubber-fill" id="scrubFill"></div></div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">Comp 01 · Now Rendering</div>
+      <h1>
+        Sushant Basnet<br>
+        <span class="line2">a.k.a.</span> <span class="accent">Myster SVZ</span>
+      </h1>
+      <p class="lede">Graphic designer, video editor &amp; Blender animator. 5 years deep in After Effects, building motion, visuals and stories frame by frame from Biratnagar, Nepal.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Get in touch</a>
+        <a href="https://www.youtube.com/@MysterSVZ" target="_blank" class="btn btn-ghost">Watch my work</a>
+      </div>
+      <div class="meta-row">
+        <span><b>Languages</b> · English / Nepali / Hindi</span>
+        <span><b>Studying</b> · BIC, Semester 2</span>
+        <span><b>Tools</b> · After Effects / Blender</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="monitor">
+        <div class="monitor-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:auto;">profile_final.mp4</span>
+        </div>
+        <img src="profile.jpg" alt="Sushant Basnet portrait">
+        <div class="monitor-foot">
+          <span class="rec">● REC</span>
+          <span>00:00:05:12 / 1080p</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="reveal">
+    <div class="sec-head">
+      <div class="sec-num">01 / About</div>
+      <h2 class="sec-title">Background <span class="muted">&amp; education</span></h2>
+    </div>
+    <div class="about-grid">
+      <div>
+        <p>I'm <b>Sushant Basnet</b>, known online as <b>Myster SVZ</b> — a graphic designer and video editor with <b>5 years of hands-on experience in After Effects</b>, and a 3D animator working in <b>Blender</b>.</p>
+        <p>I completed my <b>+2 (Science faculty)</b> at Arniko Awasiya College, and I'm currently in my <b>2nd semester at Biratnagar International College (BIC)</b>, continuing to sharpen both my academic and creative paths.</p>
+        <p>I work across English, Nepali, and Hindi, and I'm always experimenting with new compositing, motion design and 3D techniques.</p>
+        <div class="lang-list">
+          <span class="lang-pill">EN — English</span>
+          <span class="lang-pill">NE — नेपाली</span>
+          <span class="lang-pill">HI — हिन्दी</span>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="row">
+          <span class="l">12th / +2</span>
+          <span class="r">Arniko Awasiya College<small>Science Faculty — Passed Out</small></span>
+        </div>
+        <div class="row">
+          <span class="l">Currently</span>
+          <span class="r">Biratnagar International College<small>BIC — 2nd Semester Running</small></span>
+        </div>
+        <div class="row">
+          <span class="l">Status</span>
+          <span class="r">Active Creator<small>Building Myster SVZ</small></span>
+        </div>
+        <span class="badge-status">● Open for freelance &amp; collabs</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="reveal">
+    <div class="sec-head">
+      <div class="sec-num">02 / Skills</div>
+      <h2 class="sec-title">What I <span class="muted">work with</span></h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <span class="tag">DESIGN</span>
+        <h3>Graphic Design</h3>
+        <p>Creating logos, thumbnails, posters and brand visuals with a focus on clean, eye-catching composition.</p>
+        <div class="bar"><i style="width:88%"></i></div>
+      </div>
+      <div class="skill-card">
+        <span class="tag">EDITING · 5 YRS</span>
+        <h3>Video Editing &amp; AE</h3>
+        <p>5 years of experience in After Effects — motion graphics, VFX, transitions and full video edits.</p>
+        <div class="bar"><i style="width:95%"></i></div>
+      </div>
+      <div class="skill-card">
+        <span class="tag">3D</span>
+        <h3>Blender Animation</h3>
+        <p>Modeling, rigging and animating 3D scenes and assets in Blender for short clips and intros.</p>
+        <div class="bar"><i style="width:80%"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="timeline" class="reveal">
+    <div class="sec-head">
+      <div class="sec-num">03 / Journey</div>
+      <h2 class="sec-title">Education <span class="muted">timeline</span></h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-time">COMPLETED</div>
+        <h4>+2 Science, Arniko Awasiya College</h4>
+        <p>Finished my higher secondary education in the science faculty — passed out and moved on to college.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">5 YEARS ALONGSIDE STUDIES</div>
+        <h4>Learning After Effects &amp; Blender</h4>
+        <p>Self-driven journey into motion graphics, video editing and 3D animation, growing the Myster SVZ brand on Instagram and YouTube.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">IN PROGRESS — SEMESTER 2</div>
+        <h4>Biratnagar International College (BIC)</h4>
+        <p>Currently studying at BIC, second semester running, while continuing to take on design and editing work.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="reveal">
+    <div class="sec-head">
+      <div class="sec-num">04 / Connect</div>
+      <h2 class="sec-title">Let's <span class="muted">create something</span></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <h3>Find my work</h3>
+        <p>Follow along for edits, designs and 3D animation drops — or reach out for a project.</p>
+        <div class="channel-list">
+          <a class="channel-link" href="https://instagram.com/myster.svz" target="_blank">
+            <span class="name"><span class="icon-dot ig"></span> Instagram — @myster.svz</span>
+            <span class="arrow">→</span>
+          </a>
+          <a class="channel-link" href="https://www.youtube.com/@MysterSVZ" target="_blank">
+            <span class="name"><span class="icon-dot yt"></span> YouTube — Myster SVZ</span>
+            <span class="arrow">→</span>
+          </a>
+        </div>
+      </div>
+      <div class="contact-card">
+        <h3>Quick stats</h3>
+        <div class="render-stats">
+          <div class="stat"><span class="num">5</span><span class="lbl">Years in<br>After Effects</span></div>
+          <div class="stat"><span class="num">3</span><span class="lbl">Languages<br>Spoken</span></div>
+          <div class="stat"><span class="num">2nd</span><span class="lbl">Semester<br>at BIC</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="f-left">© <span id="year"></span> <b>Sushant Basnet</b> — Myster SVZ. All renders final.</div>
+    <a class="back-top" href="#">Back to top ↑</a>
+  </footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Scrubber fill based on scroll progress
+  const fill = document.getElementById('scrubFill');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    fill.style.width = pct + '%';
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); }
+    });
+  },{threshold:0.15});
+  reveals.forEach(r=>obs.observe(r));
+</script>
+</body>
+</html>
